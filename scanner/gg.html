@@ -1,0 +1,3437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulnerability Scan Report</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0d1117; /* Dark background */
+      color: #c9d1d9; /* Light text for contrast */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: #161b22; /* Slightly lighter than the background */
+      border-radius: 15px;
+      padding: 2.5rem;
+      width: 90%;
+      max-width: 1200px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 1.5s ease-in-out forwards; /* Add 'forwards' to keep the final state */
+      position: relative;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: #39d353; /* Teal accent color */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      animation: slideInDown 1s ease-in-out forwards; /* Add 'forwards' to keep the final state */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: #21262d; /* Dark table background */
+      border-radius: 10px;
+      overflow: hidden;
+      animation: slideInUp 1s ease-in-out forwards; /* Add 'forwards' to keep the final state */
+    }
+
+    th, td {
+      padding: 1.2rem;
+      text-align: left;
+    }
+
+    th {
+      background: #39d353; /* Teal accent color */
+      color: #0d1117; /* Dark text for contrast */
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 1.1rem;
+    }
+
+    tr:nth-child(even) {
+      background: #1f242a; /* Slightly lighter for even rows */
+    }
+
+    tr:hover {
+      background: #2d333b; /* Brighter on hover */
+      transition: background 0.3s ease;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Buttons */
+    .download-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      background: #39d353; /* Teal accent color */
+      color: #0d1117; /* Dark text for contrast */
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite; /* Infinite pulse animation */
+    }
+
+    .download-btn:hover {
+      background: #2ea043; /* Darker teal on hover */
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: rgba(201, 209, 217, 0.7); /* Light text with transparency */
+      animation: fadeIn 2s ease-in-out forwards; /* Add 'forwards' to keep the final state */
+    }
+
+    /* Background Animation */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(57, 211, 83, 0.1), transparent 70%);
+      animation: rotate 15s linear infinite; /* Infinite rotation */
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #0d1117 !important; /* Ensure dark background in PDF */
+        color: #c9d1d9 !important; /* Ensure light text in PDF */
+      }
+
+      .container {
+        background: #161b22 !important; /* Ensure container background in PDF */
+        box-shadow: none !important; /* Remove shadow for printing */
+        border-radius: 0 !important; /* Remove rounded corners for printing */
+        padding: 1rem !important; /* Adjust padding for printing */
+      }
+
+      h1 {
+        color: #39d353 !important; /* Ensure heading color in PDF */
+      }
+
+      table {
+        background: #21262d !important; /* Ensure table background in PDF */
+      }
+
+      th {
+        background: #39d353 !important; /* Ensure table header color in PDF */
+        color: #0d1117 !important; /* Ensure table header text color in PDF */
+      }
+
+      tr:nth-child(even) {
+        background: #1f242a !important; /* Ensure even row color in PDF */
+      }
+
+      .download-btn {
+        display: none !important; /* Hide the download button in PDF */
+      }
+
+      footer {
+        color: rgba(201, 209, 217, 0.7) !important; /* Ensure footer text color in PDF */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Vulnerability Scan Report</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Target</th>
+          <th>Template</th>
+          <th>Path</th>
+          <th>Matched</th>
+          <th>Severity</th> <!-- Added Severity Column -->
+        </tr>
+      </thead>
+      <tbody>
+        
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-379</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-44</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-360</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-384</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-4</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-71</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-315</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-273</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-247</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-35</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-62</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-227</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-169</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-53</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-150</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-139</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-320</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-232</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-339</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-241</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-294</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-56</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-158</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-174</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-395</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-344</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-147</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-366</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-389</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-237</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-215</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-201</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-66</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-100</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-177</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-228</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-332</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-321</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-40</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-233</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-12</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-31</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-250</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-43</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-102</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-74</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-76</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-132</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-225</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-377</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-212</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-24</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-218</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-144</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-200</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-374</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-216</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-279</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-363</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-170</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-159</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-204</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-373</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-252</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-165</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-10</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-322</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-364</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-269</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-305</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-50</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-86</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-254</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-168</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-61</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-300</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-333</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-219</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-385</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-26</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-277</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-20</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-278</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-172</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-198</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-256</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-197</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-290</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-365</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-231</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-301</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-93</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-336</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-358</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-182</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-60</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-337</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-142</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-3</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-214</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-13</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-248</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-112</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-14</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-195</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-372</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-282</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-91</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-48</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-299</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-209</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-255</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-81</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-324</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-110</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-391</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-240</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-98</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-350</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-105</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-220</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-135</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-103</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-134</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-73</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-272</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-286</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-221</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-346</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-25</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-28</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-87</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-143</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-63</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-295</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-244</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-335</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-394</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-59</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-171</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-57</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-284</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-6</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-124</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-356</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-229</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-257</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-27</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-323</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-361</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-283</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-136</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-354</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-111</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-399</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-162</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-65</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-123</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-41</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-82</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-388</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-268</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-154</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-77</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-89</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-318</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-140</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-355</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-202</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-386</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-96</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-367</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-45</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-223</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-5</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-194</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-359</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-38</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-226</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-235</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-34</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-349</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-387</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-330</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-95</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-261</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-199</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-141</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-17</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-260</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-327</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-245</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-127</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-138</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-341</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-224</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-362</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-191</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-116</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-67</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-289</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-187</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-47</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-161</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-262</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-78</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-230</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-146</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-99</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-326</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-342</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-18</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-310</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-292</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-381</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-331</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-51</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-264</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-270</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-274</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-145</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-297</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-83</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-70</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-242</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-2</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-37</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-396</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-357</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-164</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-183</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-189</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-137</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-271</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-160</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-334</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-106</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-249</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-118</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-90</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-288</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-266</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-64</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-33</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-280</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-148</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-173</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-376</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-149</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-22</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-156</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-343</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-166</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-114</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-119</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-1</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-253</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-121</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-192</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-49</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-108</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-19</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-317</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-15</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-11</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-180</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-39</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-126</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-207</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-46</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-302</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-217</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-196</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-178</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-54</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-16</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-313</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-68</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-117</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-239</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-211</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-115</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-128</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-9</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-398</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-85</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-120</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-308</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-206</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-155</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-130</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-275</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-400</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-325</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-397</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-69</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-304</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-163</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-368</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-97</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-94</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-104</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-179</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-176</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-382</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-236</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-185</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-153</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-380</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-246</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-312</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-131</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-369</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-133</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-188</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-263</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-92</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-88</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-306</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-208</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-378</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-205</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-30</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-293</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-392</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-8</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-316</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-251</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-210</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-157</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-281</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-109</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-258</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-340</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-393</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-307</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-113</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-167</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-75</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-319</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-122</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-296</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-314</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-267</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-285</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-129</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-234</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-370</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-352</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-175</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-21</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-184</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-52</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-390</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-309</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-42</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-259</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-151</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-29</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-36</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-186</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-291</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-190</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-276</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-265</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-329</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-353</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-55</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-222</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-107</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-203</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-287</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-80</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-383</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-193</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-79</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-7</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-375</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-345</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-84</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-303</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-298</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-58</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-213</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-32</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-371</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-238</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-243</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-152</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-72</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-125</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-348</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-351</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-181</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-338</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-23</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-311</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-328</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-347</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>http://localhost/vuln.php</td>
+                <td>reflected-xss-101</td>
+                <td>/vulnerable-endpoint</td>
+                <td></td>
+                <td>N/A</td>
+            </tr>
+            
+      </tbody>
+    </table>
+    <button class="download-btn" onclick="window.print()">Download Report</button>
+    <footer>
+      Generated by Shosha | © 2025 All rights reserved.
+    </footer>
+  </div>
+</body>
+</html>
